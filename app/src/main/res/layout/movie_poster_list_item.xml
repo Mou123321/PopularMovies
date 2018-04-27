@@ -1,21 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout>
+    <data>
+        <variable
+            name="vm"
+            type="com.mou.popularmovies.MoviePosterViewModel">
+        </variable>
+    </data>
 
-    <ImageView
-        android:id="@+id/movie_image"
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/movie_title"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/movie_image"
-        android:gravity="center"/>
-</android.support.v7.widget.CardView>
+        <ImageView
+            android:id="@+id/movie_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:bindImage="@{vm.moviePosterModel.getImage()}"/>
+
+        <TextView
+            android:id="@+id/movie_title"
+            android:text="@{vm.moviePosterModel.getTitle()}"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/movie_image"
+            android:gravity="center"/>
+
+    </android.support.v7.widget.CardView>
+</layout>

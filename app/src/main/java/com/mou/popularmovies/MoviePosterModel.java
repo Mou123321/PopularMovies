@@ -1,11 +1,11 @@
 package com.mou.popularmovies;
 
 public class MoviePosterModel {
-    String image;
-    String title;
-    String synopsis;
-    String rating;
-    String releaseDate;
+    private String image;
+    private String title;
+    private String synopsis;
+    private String rating;
+    private String releaseDate;
 
     public MoviePosterModel(String image, String title, String synopsis, String rating, String releaseDate) {
         this.image = image;
