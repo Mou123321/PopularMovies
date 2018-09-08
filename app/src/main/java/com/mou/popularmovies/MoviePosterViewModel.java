@@ -1,9 +1,29 @@
 package com.mou.popularmovies;
 
-public class MoviePosterViewModel {
-    public final MoviePosterModel moviePosterModel;
+import android.support.annotation.Nullable;
 
-    public MoviePosterViewModel(MoviePosterModel moviePosterModel ) {
-        this.moviePosterModel = moviePosterModel;
+import java.lang.ref.WeakReference;
+
+public class MoviePosterViewModel {
+
+    public final String imageString;
+    public final int position;
+
+    @Nullable
+    private WeakReference<MovieNavigator> mNavigator;
+
+    public MoviePosterViewModel(String imageUrl, int position) {
+        imageString = imageUrl;
+        this.position = position;
+    }
+
+    public void setNavigator(MovieNavigator navigator) {
+        mNavigator = new WeakReference<>(navigator);
+    }
+
+    public void posterClicked() {
+        if (mNavigator != null && mNavigator.get() != null) {
+            mNavigator.get().getMovieDetail(position);
+        }
     }
 }
