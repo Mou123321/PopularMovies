@@ -1,5 +1,6 @@
 package com.mou.popularmovies;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -24,9 +25,9 @@ public class MainActivity extends AppCompatActivity implements MovieNavigator {
     private RecyclerView recyclerView;
     private MovieService mService;
 
-    private List<MovieModel> moiveList;
+    public static List<MovieModel> movieList;
 
-    private static String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
+    public static String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements MovieNavigator {
         mService = ApiUtils.getMovieService();
         recyclerView = findViewById(R.id.recycler_view);
 
-        moiveList = new ArrayList<>();
+        movieList = new ArrayList<>();
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 3);
         recyclerView.setLayoutManager(layoutManager);
@@ -50,10 +51,8 @@ public class MainActivity extends AppCompatActivity implements MovieNavigator {
             popupMenu.setOnMenuItemClickListener(item -> {
                 if (item.getTitle().equals(getString(R.string.popular_sort_text))) {
                     displayPopMovies();
-                    System.out.println("popular");
                 } else {
                     displayTopRatedMovies();
-                    System.out.println("top rated");
                 }
                 return true;
             });
@@ -80,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements MovieNavigator {
 
     private List<String> getImageUrlList(ListMovieModel listMovieModel) {
         List<MovieModel> movieList = listMovieModel.getmovieList();
-        this.moiveList = movieList;
+        MainActivity.movieList = movieList;
         List<String> imageUrls = new ArrayList<>();
         for (MovieModel movie : movieList) {
             String imageUrl = BASE_IMAGE_URL + movie.getImageUrl();
@@ -91,6 +90,8 @@ public class MainActivity extends AppCompatActivity implements MovieNavigator {
 
     @Override
     public void getMovieDetail(int position) {
-        System.out.println("position " + position +" is clicked");
+        Intent intent = new Intent(this, MoviePosterDetailsActivity.class);
+        intent.putExtra("movie", position);
+        startActivity(intent);
     }
 }
