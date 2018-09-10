@@ -12,11 +12,11 @@ public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MoviesRecycl
 
     private List<String> imageUrls;
 
-    private MovieNavigator mNavigetor;
+    private MovieNavigator mNavigator;
 
     public MoviesRecyclerViewAdapter(List<String> imageUrls, MovieNavigator navigator) {
         this.imageUrls = imageUrls;
-        mNavigetor = navigator;
+        mNavigator = navigator;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MoviesRecycl
 
         public void bind(String imageUrl, int position) {
             MoviePosterViewModel vm = new MoviePosterViewModel(imageUrl, position);
-            vm.setNavigator(mNavigetor);
+            vm.setNavigator(mNavigator);
             mBinding.setVariable(BR.vm, vm);
             mBinding.executePendingBindings();
         }

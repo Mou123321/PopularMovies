@@ -12,13 +12,17 @@ public class MovieModel {
     @SerializedName("release_date")
     @Expose
     private String releaseDate;
+    @SerializedName("vote_average")
+    @Expose
+    private double voteAverage;
 
-    public MovieModel(String title, String imageUrl, String overview, String releaseDate) {
+    public MovieModel(String title, String imageUrl, String overview, String releaseDate, double voteAverage) {
 
         this.title = title;
         this.imageUrl = imageUrl;
         this.overview = overview;
         this.releaseDate = releaseDate;
+        this.voteAverage = voteAverage;
     }
 
     public String getTitle() {
@@ -51,5 +55,13 @@ public class MovieModel {
 
     public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
+    }
+
+    public double getVoteAverage() {
+        return voteAverage;
+    }
+
+    public void setVoteAverage(double voteAverage) {
+        this.voteAverage = voteAverage;
     }
 }
