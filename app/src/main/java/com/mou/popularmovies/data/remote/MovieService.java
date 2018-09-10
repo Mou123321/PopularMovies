@@ -8,7 +8,7 @@ import rx.Observable;
 public interface MovieService {
 
     //api key here
-    String API_KEY = "b2ed211e9e837f0d96dce9eb6f673630\n";
+    String API_KEY = "API KEY";
 
     String POP_END_POINT = "/3/movie/popular?api_key=" + API_KEY;
 
