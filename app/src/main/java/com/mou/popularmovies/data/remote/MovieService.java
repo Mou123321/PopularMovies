@@ -1,5 +1,8 @@
 package com.mou.popularmovies.data.remote;
 
+import android.os.Build;
+
+import com.mou.popularmovies.BuildConfig;
 import com.mou.popularmovies.data.model.ListMovieModel;
 
 import retrofit2.http.GET;
@@ -8,7 +11,7 @@ import rx.Observable;
 public interface MovieService {
 
     //api key here
-    String API_KEY = "KEY";
+    String API_KEY = BuildConfig.API_KEY;
 
     String POP_END_POINT = "/3/movie/popular?api_key=" + API_KEY;
 
