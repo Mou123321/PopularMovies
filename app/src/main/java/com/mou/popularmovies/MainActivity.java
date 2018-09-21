@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements MovieNavigator {
     @Override
     public void getMovieDetail(int position) {
         Intent intent = new Intent(this, MoviePosterDetailsActivity.class);
-        intent.putExtra("movie", position);
+        intent.putExtra("movie", movieList.get(position));
         startActivity(intent);
     }
 }

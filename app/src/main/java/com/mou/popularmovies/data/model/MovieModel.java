@@ -1,9 +1,12 @@
 package com.mou.popularmovies.data.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class MovieModel {
+public class MovieModel implements Parcelable{
     private String title;
     @SerializedName("poster_path")
     @Expose
@@ -23,6 +26,24 @@ public class MovieModel {
         this.overview = overview;
         this.releaseDate = releaseDate;
         this.voteAverage = voteAverage;
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public MovieModel createFromParcel(Parcel in) {
+            return new MovieModel(in);
+        }
+
+        public MovieModel[] newArray(int size) {
+            return new MovieModel[size];
+        }
+    };
+
+    private MovieModel(Parcel in) {
+        this.title = in.readString();
+        this.imageUrl = in.readString();
+        this.overview = in.readString();
+        this.releaseDate = in.readString();
+        this.voteAverage = in.readDouble();
     }
 
     public String getTitle() {
@@ -63,5 +84,19 @@ public class MovieModel {
 
     public void setVoteAverage(double voteAverage) {
         this.voteAverage = voteAverage;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.title);
+        dest.writeString(this.imageUrl);
+        dest.writeString(this.overview);
+        dest.writeString(this.releaseDate);
+        dest.writeDouble(this.voteAverage);
     }
 }
