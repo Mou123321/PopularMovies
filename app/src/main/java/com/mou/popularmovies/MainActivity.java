@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 
@@ -29,18 +30,27 @@ public class MainActivity extends AppCompatActivity implements MovieNavigator {
 
     public static String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
 
+    public static String POP_ERROR_TAG = "Pop loading errors",
+                        TOP_RATED_ERROR_TAG = "Top rated loading error";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        init();
+    }
 
+    private void init() {
         mService = ApiUtils.getMovieService();
         recyclerView = findViewById(R.id.recycler_view);
 
         movieList = new ArrayList<>();
+        adapter = new MoviesRecyclerViewAdapter(new ArrayList<>(), this);
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 3);
         recyclerView.setLayoutManager(layoutManager);
+
+        recyclerView.setAdapter(adapter);
 
         displayPopMovies();
 
@@ -65,16 +75,16 @@ public class MainActivity extends AppCompatActivity implements MovieNavigator {
         mService.getPopMovies()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(r -> recyclerView.setAdapter(adapter = new MoviesRecyclerViewAdapter(getImageUrlList(r), this)),
-                        e -> System.out.println(e.getMessage()));
+                .subscribe(r -> adapter.update(getImageUrlList(r)),
+                        e -> Log.e(e.getMessage(), POP_ERROR_TAG));
     }
 
     private void displayTopRatedMovies() {
         mService.getTopRatedMovies()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(r -> recyclerView.setAdapter(adapter = new MoviesRecyclerViewAdapter(getImageUrlList(r), this)),
-                        e -> System.out.println(e.getMessage()));
+                .subscribe(r -> adapter.update(getImageUrlList(r)),
+                        e -> Log.e(e.getMessage(), TOP_RATED_ERROR_TAG));
     }
 
     private List<String> getImageUrlList(ListMovieModel listMovieModel) {
