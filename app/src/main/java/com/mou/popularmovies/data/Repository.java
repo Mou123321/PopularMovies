@@ -21,12 +21,6 @@ public class Repository {
     @NonNull
     private final MovieService mService;
 
-    private static String POP_ERROR_TAG = "Pop loading errors",
-            TOP_RATED_ERROR_TAG = "Top rated loading error";
-
-    private static String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
-
-
     private Repository() {
         this.mService = ApiUtils.getMovieService();
     }
@@ -44,7 +38,7 @@ public class Repository {
                 .map(this::getMovieList);
     }
 
-    private Observable<List<MovieModel>> getTopRatedMovieList() {
+    public Observable<List<MovieModel>> getTopRatedMovieList() {
         return mService.getTopRatedMovies()
                 .subscribeOn(Schedulers.io())
                 .map(this::getMovieList);
