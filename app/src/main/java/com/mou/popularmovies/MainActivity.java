@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 
+import com.mou.popularmovies.data.Repository;
 import com.mou.popularmovies.data.model.ListMovieModel;
 import com.mou.popularmovies.data.model.MovieModel;
 import com.mou.popularmovies.data.remote.MovieService;
@@ -23,15 +24,11 @@ import rx.schedulers.Schedulers;
 public class MainActivity extends AppCompatActivity implements MovieNavigator {
 
     private MoviesRecyclerViewAdapter adapter;
-    private RecyclerView recyclerView;
-    private MovieService mService;
+    private MainActivityViewModel viewModel;
 
     public static List<MovieModel> movieList;
 
-    public static String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
-
-    public static String POP_ERROR_TAG = "Pop loading errors",
-                        TOP_RATED_ERROR_TAG = "Top rated loading error";
+    private static int NUM_COL = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,18 +38,18 @@ public class MainActivity extends AppCompatActivity implements MovieNavigator {
     }
 
     private void init() {
-        mService = ApiUtils.getMovieService();
-        recyclerView = findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
 
         movieList = new ArrayList<>();
         adapter = new MoviesRecyclerViewAdapter(new ArrayList<>(), this);
 
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 3);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, NUM_COL);
         recyclerView.setLayoutManager(layoutManager);
 
         recyclerView.setAdapter(adapter);
 
-        displayPopMovies();
+        viewModel = new MainActivityViewModel(Repository.getInstance());
+        viewModel.setPop(adapter, true);
 
         ImageView view = findViewById(R.id.select_button);
         view.setOnClickListener(v -> {
@@ -60,48 +57,24 @@ public class MainActivity extends AppCompatActivity implements MovieNavigator {
             popupMenu.getMenuInflater().inflate(R.menu.main_popup_menu, popupMenu.getMenu());
             popupMenu.setOnMenuItemClickListener(item -> {
                 if (item.getTitle().equals(getString(R.string.popular_sort_text))) {
-                    displayPopMovies();
+                    displayPopMovies(true);
                 } else {
-                    displayTopRatedMovies();
+                    displayPopMovies(false);
                 }
                 return true;
             });
-
             popupMenu.show();
         });
     }
 
-    private void displayPopMovies() {
-        mService.getPopMovies()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(r -> adapter.update(getImageUrlList(r)),
-                        e -> Log.e(e.getMessage(), POP_ERROR_TAG));
-    }
-
-    private void displayTopRatedMovies() {
-        mService.getTopRatedMovies()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(r -> adapter.update(getImageUrlList(r)),
-                        e -> Log.e(e.getMessage(), TOP_RATED_ERROR_TAG));
-    }
-
-    private List<String> getImageUrlList(ListMovieModel listMovieModel) {
-        List<MovieModel> movieList = listMovieModel.getmovieList();
-        MainActivity.movieList = movieList;
-        List<String> imageUrls = new ArrayList<>();
-        for (MovieModel movie : movieList) {
-            String imageUrl = BASE_IMAGE_URL + movie.getImageUrl();
-            imageUrls.add(imageUrl);
-        }
-        return imageUrls;
+    private void displayPopMovies(boolean getTop) {
+        viewModel.setPop(adapter, getTop);
     }
 
     @Override
     public void getMovieDetail(int position) {
         Intent intent = new Intent(this, MoviePosterDetailsActivity.class);
-        intent.putExtra("movie", movieList.get(position));
+        intent.putExtra("movie", viewModel.getMovieList().get(position));
         startActivity(intent);
     }
 }

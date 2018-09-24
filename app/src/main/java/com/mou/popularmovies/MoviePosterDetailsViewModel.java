@@ -11,7 +11,7 @@ public class MoviePosterDetailsViewModel {
 
     public MoviePosterDetailsViewModel(MovieModel movieModel) {
         title = movieModel.getTitle();
-        imageUrl = MainActivity.BASE_IMAGE_URL +  movieModel.getImageUrl();
+        imageUrl = MainActivityViewModel.BASE_IMAGE_URL +  movieModel.getImageUrl();
         voteAverage = String.valueOf(movieModel.getVoteAverage() + "/10");
         date = movieModel.getReleaseDate();
         overview = movieModel.getOverview();
