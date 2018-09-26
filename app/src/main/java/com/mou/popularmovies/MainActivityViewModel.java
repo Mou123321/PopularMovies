@@ -31,13 +31,13 @@ public class MainActivityViewModel {
         if (getTop) {
             repository.getPopMovieList()
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(list -> adapter.update(getImageUrlList(movieList = list))
-                            , e -> Log.e(POP_ERROR_TAG, e.getMessage()));
+                    .subscribe(list -> adapter.update(getImageUrlList(movieList = list)),
+                            e -> Log.e(POP_ERROR_TAG, e.getMessage()));
         } else {
             repository.getTopRatedMovieList()
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(list -> adapter.update(getImageUrlList(movieList = list))
-                            , e -> Log.e(TOP_RATED_ERROR_TAG, e.getMessage()));
+                    .subscribe(list -> adapter.update(getImageUrlList(movieList = list)),
+                            e -> Log.e(TOP_RATED_ERROR_TAG, e.getMessage()));
         }
     }
 

@@ -4,7 +4,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.mou.popularmovies.data.model.ListMovieModel;
+import com.mou.popularmovies.data.model.ListVideoModel;
 import com.mou.popularmovies.data.model.MovieModel;
+import com.mou.popularmovies.data.model.VideoModel;
 import com.mou.popularmovies.data.remote.MovieService;
 import com.mou.popularmovies.utils.ApiUtils;
 
@@ -44,7 +46,17 @@ public class Repository {
                 .map(this::getMovieList);
     }
 
+    public Observable<List<VideoModel>> getVideoList(String id) {
+        return mService.getVideo(id)
+                .subscribeOn(Schedulers.io())
+                .map(this::getVideos);
+    }
+
     private List<MovieModel> getMovieList(ListMovieModel listMovieModel) {
-        return listMovieModel.getmovieList();
+        return listMovieModel.getMovieList();
+    }
+
+    private List<VideoModel> getVideos(ListVideoModel listVideoModel) {
+        return listVideoModel.getVideoList();
     }
 }

@@ -6,4 +6,8 @@
     <string name="popular_sort_text">Sorted by Popularity</string>
     <string name="top_rated_sort_text">Sorted by Top Rated</string>
     <string name="detail_page_title">Movie Detail</string>
+
+    <string name="video_title_text">Trailers</string>
+
+    <string name="no_trailer_text">This movie does not have trailer.</string>
 </resources>
