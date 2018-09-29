@@ -2,6 +2,7 @@ package com.mou.popularmovies.data.remote;
 
 import com.mou.popularmovies.BuildConfig;
 import com.mou.popularmovies.data.model.ListMovieModel;
+import com.mou.popularmovies.data.model.ListReviewModel;
 import com.mou.popularmovies.data.model.ListVideoModel;
 import com.mou.popularmovies.data.model.MovieModel;
 
@@ -20,7 +21,7 @@ public interface MovieService {
 
     String VIDEO_END_POINT = "/3/movie/{id}/videos?api_key=" + API_KEY;
 
-    String REVIEW_END_POINT = "/3/movie/{id}/videos?api_key=" + API_KEY;
+    String REVIEW_END_POINT = "/3/movie/{id}/reviews?api_key=" + API_KEY;
 
     @GET(POP_END_POINT)
     Observable<ListMovieModel> getPopMovies();
@@ -32,5 +33,5 @@ public interface MovieService {
     Observable<ListVideoModel> getVideo(@Path("id") String id);
 
     @GET(REVIEW_END_POINT)
-    Observable<MovieModel> getReview(@Path("id") String id);
+    Observable<ListReviewModel> getReview(@Path("id") String id);
 }

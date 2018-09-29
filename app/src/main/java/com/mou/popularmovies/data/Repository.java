@@ -1,11 +1,14 @@
 package com.mou.popularmovies.data;
 
+import android.databinding.ObservableArrayList;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.mou.popularmovies.data.model.ListMovieModel;
+import com.mou.popularmovies.data.model.ListReviewModel;
 import com.mou.popularmovies.data.model.ListVideoModel;
 import com.mou.popularmovies.data.model.MovieModel;
+import com.mou.popularmovies.data.model.ReviewModel;
 import com.mou.popularmovies.data.model.VideoModel;
 import com.mou.popularmovies.data.remote.MovieService;
 import com.mou.popularmovies.utils.ApiUtils;
@@ -52,11 +55,21 @@ public class Repository {
                 .map(this::getVideos);
     }
 
+    public Observable<List<ReviewModel>> getReviewList(String id) {
+        return mService.getReview(id)
+                .subscribeOn(Schedulers.io())
+                .map(this::getReviews);
+    }
+
     private List<MovieModel> getMovieList(ListMovieModel listMovieModel) {
         return listMovieModel.getMovieList();
     }
 
     private List<VideoModel> getVideos(ListVideoModel listVideoModel) {
         return listVideoModel.getVideoList();
+    }
+
+    private List<ReviewModel> getReviews(ListReviewModel listReviewModel) {
+        return listReviewModel.getReviewsList();
     }
 }

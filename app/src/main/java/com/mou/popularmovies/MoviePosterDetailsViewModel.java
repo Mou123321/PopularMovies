@@ -2,9 +2,11 @@ package com.mou.popularmovies;
 
 import android.databinding.ObservableArrayList;
 import android.support.annotation.Nullable;
+import android.util.Pair;
 
 import com.mou.popularmovies.data.Repository;
 import com.mou.popularmovies.data.model.MovieModel;
+import com.mou.popularmovies.data.model.ReviewModel;
 import com.mou.popularmovies.data.model.VideoModel;
 
 import java.lang.ref.WeakReference;
@@ -21,6 +23,7 @@ public class MoviePosterDetailsViewModel {
     public final String id;
     public ObservableArrayList<String> name;
     public ObservableArrayList<String> key;
+    public ObservableArrayList<Pair<String, String>> reviews;
 
     private Repository repository;
     private List<VideoModel> videos;
@@ -41,8 +44,10 @@ public class MoviePosterDetailsViewModel {
 
         name = new ObservableArrayList<>();
         key = new ObservableArrayList<>();
+        reviews = new ObservableArrayList<>();
 
         getVideos(id);
+        getReviews(id);
     }
 
     public void setNavigator(TrailerNavigator navigator) {
@@ -55,12 +60,24 @@ public class MoviePosterDetailsViewModel {
                 .subscribe(this::getKeyAndName);
     }
 
+    private void getReviews(String id) {
+        repository.getReviewList(id)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::getReview);
+    }
+
     private void getKeyAndName(List<VideoModel> list) {
         videos = list;
-        System.out.println("list is " + list);
         for (VideoModel video : list) {
             name.add(video.getName());
             key.add(video.getKey());
+        }
+    }
+
+    private void getReview(List<ReviewModel> list) {
+        for (ReviewModel review : list) {
+            System.out.println("author is " + review.getAuthor());
+            reviews.add(new Pair<>(review.getAuthor(), review.getContent()));
         }
     }
 
