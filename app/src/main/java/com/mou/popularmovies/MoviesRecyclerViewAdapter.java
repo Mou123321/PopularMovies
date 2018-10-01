@@ -45,6 +45,7 @@ public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MoviesRecycl
     public void update(List<String> newList) {
         imageUrls = newList;
         notifyDataSetChanged();
+        MainActivity.restoreState();
     }
 
     public class MoviePosterViewHolder extends RecyclerView.ViewHolder {

@@ -15,13 +15,12 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class MoviePosterBindingAdapet {
+public class MoviePosterBindingAdapter {
 
     @BindingAdapter("android:bindImage")
     public static void loadImage(ImageView imageView, String imageUrl) {
         Picasso.with(imageView.getContext()).load(imageUrl).into(imageView);
     }
-
 
     @BindingAdapter({"entries", "layout", "vm"})
     public static <T> void setEntries(ViewGroup viewGroup, List<T> entries, int layoutId, MoviePosterDetailsViewModel vm) {
@@ -58,5 +57,6 @@ public class MoviePosterBindingAdapet {
                 }
             }
         }
+        MoviePosterDetailsActivity.restoreState();
     }
 }
