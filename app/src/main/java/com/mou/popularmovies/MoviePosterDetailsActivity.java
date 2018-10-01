@@ -41,15 +41,19 @@ public class MoviePosterDetailsActivity extends AppCompatActivity implements Tra
 
     public static void restoreState() {
         if(position != null)
-            binding.scrollView.post(new Runnable() {
-                public void run() {
-                    binding.scrollView.scrollTo(position[0], position[1]);
-                }
+            binding.scrollView.post(() -> {
+                binding.scrollView.scrollTo(position[0], position[1]);
             });
     }
 
     @Override
     public void display(String key) {
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(YOUTUBE_BASE_URL + key)));
+    }
+
+    @Override
+    protected void onDestroy() {
+        position = null;
+        super.onDestroy();
     }
 }

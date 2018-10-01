@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements MovieNavigator {
     public static void restoreState() {
         if (mBundleRecyclerViewState != null) {
             recyclerView.getLayoutManager().onRestoreInstanceState(mBundleRecyclerViewState);
+            mBundleRecyclerViewState = null;
         }
     }
 
