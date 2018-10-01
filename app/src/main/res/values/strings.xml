@@ -8,6 +8,8 @@
     <string name="detail_page_title">Movie Detail</string>
 
     <string name="video_title_text">Trailers</string>
+    <string name="review_title_text">Reviews</string>
 
     <string name="no_trailer_text">This movie does not have trailer.</string>
+    <string name="no_review_text">This movie does not have review.</string>
 </resources>

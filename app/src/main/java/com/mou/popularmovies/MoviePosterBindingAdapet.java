@@ -3,11 +3,13 @@ package com.mou.popularmovies;
 import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.mou.popularmovies.databinding.ReviewItemBinding;
 import com.mou.popularmovies.databinding.TrailerItemBinding;
 import com.squareup.picasso.Picasso;
 
@@ -38,6 +40,19 @@ public class MoviePosterBindingAdapet {
                         binding.name.setText((String) entry);
                         int index = i;
                         binding.name.setOnClickListener(v -> vm.displayTrailer(index));
+                        viewGroup.addView(binding.getRoot());
+                    }
+                }
+            } else {
+                if (entries.size() == 0){
+                    ReviewItemBinding binding = DataBindingUtil.inflate(inflater, layoutId, viewGroup, false);
+                    binding.review.setText(viewGroup.getContext().getResources().getString(R.string.no_review_text));
+                    viewGroup.addView(binding.getRoot());
+                }else {
+                    for (int i = 0; i < entries.size(); i++) {
+                        ReviewItemBinding binding = DataBindingUtil.inflate(inflater, layoutId, viewGroup, false);
+                        Pair<String, String> entry = (Pair<String, String>) entries.get(i);
+                        binding.review.setText(new StringBuilder().append(entry.first).append(" : ").append(entry.second).toString());
                         viewGroup.addView(binding.getRoot());
                     }
                 }

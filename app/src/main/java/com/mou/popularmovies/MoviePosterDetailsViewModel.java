@@ -32,6 +32,8 @@ public class MoviePosterDetailsViewModel {
     private WeakReference<TrailerNavigator> mNavigator;
 
     public static final int TRAILER_LAYOUT_ID = R.layout.trailer_item;
+    public static final int REVIEW_LAYOUT_ID = R.layout.review_item;
+
 
     public MoviePosterDetailsViewModel(MovieModel movieModel, Repository repository) {
         title = movieModel.getTitle();
