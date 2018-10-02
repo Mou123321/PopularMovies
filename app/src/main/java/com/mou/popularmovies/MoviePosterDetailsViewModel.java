@@ -1,6 +1,7 @@
 package com.mou.popularmovies;
 
 import android.databinding.ObservableArrayList;
+import android.databinding.ObservableBoolean;
 import android.support.annotation.Nullable;
 import android.util.Pair;
 
@@ -8,6 +9,7 @@ import com.mou.popularmovies.data.Repository;
 import com.mou.popularmovies.data.model.MovieModel;
 import com.mou.popularmovies.data.model.ReviewModel;
 import com.mou.popularmovies.data.model.VideoModel;
+import com.mou.popularmovies.data.room.FavoriteMovieEntity;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -24,6 +26,8 @@ public class MoviePosterDetailsViewModel {
     public ObservableArrayList<String> name;
     public ObservableArrayList<String> key;
     public ObservableArrayList<Pair<String, String>> reviews;
+
+    public ObservableBoolean favorietIt = new ObservableBoolean(false);
 
     private Repository repository;
     private List<VideoModel> videos;
@@ -86,6 +90,16 @@ public class MoviePosterDetailsViewModel {
     public void displayTrailer(int index) {
         if (mNavigator != null  && mNavigator.get() != null) {
             mNavigator.get().display(key.get(index));
+        }
+    }
+
+    public void favotiteMovie(boolean favoriteIt) {
+        if (mNavigator != null && mNavigator.get() != null) {
+            if (favoriteIt) {
+                mNavigator.get().favorite(repository.insertFavorite(new FavoriteMovieEntity(title, id)));
+            } else {
+                mNavigator.get().favorite(repository.deleteFavorite(new FavoriteMovieEntity(title, id)));
+            }
         }
     }
 }

@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements MovieNavigator {
 
         recyclerView.setAdapter(adapter);
 
-        viewModel = new MainActivityViewModel(Repository.getInstance());
+        viewModel = new MainActivityViewModel(Repository.getInstance(getApplicationContext()));
         viewModel.setPop(adapter, true);
 
         ImageView view = findViewById(R.id.select_button);
