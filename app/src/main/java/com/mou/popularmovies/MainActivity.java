@@ -1,13 +1,9 @@
 package com.mou.popularmovies;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +12,6 @@ import android.widget.PopupMenu;
 
 import com.mou.popularmovies.data.Repository;
 import com.mou.popularmovies.data.model.MovieModel;
-import com.mou.popularmovies.data.room.FavoriteMovieEntity;
 
 import java.util.ArrayList;
 import java.util.List;

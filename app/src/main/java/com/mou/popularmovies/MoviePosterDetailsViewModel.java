@@ -1,6 +1,5 @@
 package com.mou.popularmovies;
 
-import android.arch.lifecycle.LiveData;
 import android.databinding.ObservableArrayList;
 import android.databinding.ObservableField;
 import android.support.annotation.Nullable;
