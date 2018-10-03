@@ -1,52 +1,78 @@
 package com.mou.popularmovies;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.ViewModel;
 import android.util.Log;
 
 import com.mou.popularmovies.data.Repository;
 import com.mou.popularmovies.data.model.MovieModel;
+import com.mou.popularmovies.data.room.FavoriteMovieEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.android.schedulers.AndroidSchedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
-public class MainActivityViewModel {
+public class MainActivityViewModel extends ViewModel{
     private List<MovieModel> movieList;
     private Repository repository;
 
+    private LiveData<List<FavoriteMovieEntity>> favoriteMovieList;
+
     private static String POP_ERROR_TAG = "Pop loading errors",
-            TOP_RATED_ERROR_TAG = "Top rated loading error";
+            TOP_RATED_ERROR_TAG = "Top rated loading error",
+            FAVORED_ERROR_TAG = "Favored loading error";
 
     public static String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
 
     public MainActivityViewModel(Repository repository) {
         this.repository = repository;
+        favoriteMovieList = repository.getFavorite();
+    }
+
+    public LiveData<List<FavoriteMovieEntity>> getFavoriteMovieList() {
+        return favoriteMovieList;
     }
 
     public List<MovieModel> getMovieList() {
         return movieList;
     }
 
-    public void setPop(MoviesRecyclerViewAdapter adapter, boolean getTop) {
+    public void displayFilteredMovies(MoviesRecyclerViewAdapter adapter, boolean getTop) {
         if (getTop) {
             repository.getPopMovieList()
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(list -> adapter.update(getImageUrlList(movieList = list))
-                            , e -> Log.e(POP_ERROR_TAG, e.getMessage()));
+                    .subscribe(list -> adapter.update(getImageUrlList(movieList = list)),
+                            e -> Log.e(POP_ERROR_TAG, e.getMessage()));
         } else {
             repository.getTopRatedMovieList()
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(list -> adapter.update(getImageUrlList(movieList = list))
-                            , e -> Log.e(TOP_RATED_ERROR_TAG, e.getMessage()));
+                    .subscribe(list -> adapter.update(getImageUrlList(movieList = list)),
+                            e -> Log.e(TOP_RATED_ERROR_TAG, e.getMessage()));
         }
     }
 
-    private List<String> getImageUrlList(List<MovieModel> list) {
+    public void setFavoriteMovie(MoviesRecyclerViewAdapter adapter, List<FavoriteMovieEntity> entities) {
+        repository.getFavoriteMovieList(getIdList(entities))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(list -> adapter.update(getImageUrlList(movieList = list)),
+                        e -> Log.e(FAVORED_ERROR_TAG, e.getMessage()));
+    }
+
+    public List<String> getImageUrlList(List<MovieModel> list) {
         List<String> imageUrls = new ArrayList<>();
         for (MovieModel movie : list) {
             String imageUrl = BASE_IMAGE_URL + movie.getImageUrl();
             imageUrls.add(imageUrl);
         }
         return imageUrls;
+    }
+
+    private List<String> getIdList(List<FavoriteMovieEntity> entities) {
+        List<String> ids = new ArrayList<>();
+        for (FavoriteMovieEntity entity : entities) {
+            ids.add(entity.getMovieId());
+        }
+        return ids;
     }
 }

@@ -18,14 +18,16 @@ public class MovieModel implements Parcelable{
     @SerializedName("vote_average")
     @Expose
     private double voteAverage;
+    private int id;
 
-    public MovieModel(String title, String imageUrl, String overview, String releaseDate, double voteAverage) {
+    public MovieModel(String title, String imageUrl, String overview, String releaseDate, double voteAverage, int id) {
 
         this.title = title;
         this.imageUrl = imageUrl;
         this.overview = overview;
         this.releaseDate = releaseDate;
         this.voteAverage = voteAverage;
+        this.id = id;
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -44,6 +46,7 @@ public class MovieModel implements Parcelable{
         this.overview = in.readString();
         this.releaseDate = in.readString();
         this.voteAverage = in.readDouble();
+        this.id = in.readInt();
     }
 
     public String getTitle() {
@@ -86,6 +89,14 @@ public class MovieModel implements Parcelable{
         this.voteAverage = voteAverage;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -98,5 +109,6 @@ public class MovieModel implements Parcelable{
         dest.writeString(this.overview);
         dest.writeString(this.releaseDate);
         dest.writeDouble(this.voteAverage);
+        dest.writeInt(this.id);
     }
 }
