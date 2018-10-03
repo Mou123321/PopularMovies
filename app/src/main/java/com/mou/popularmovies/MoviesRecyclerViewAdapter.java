@@ -42,6 +42,12 @@ public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MoviesRecycl
         return R.layout.movie_poster_list_item;
     }
 
+    public void update(List<String> newList) {
+        imageUrls = newList;
+        notifyDataSetChanged();
+        MainActivity.restoreState();
+    }
+
     public class MoviePosterViewHolder extends RecyclerView.ViewHolder {
         private final ViewDataBinding mBinding;
 

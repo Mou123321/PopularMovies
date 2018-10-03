@@ -9,4 +9,9 @@
         android:id="@+id/top_rated"
         android:title="@string/top_rated_sort_text"
         />
+
+    <item
+        android:id="@+id/favorite"
+        android:title="@string/favorite_sort_text"
+        />
 </menu>

@@ -15,11 +15,11 @@ public class ListMovieModel {
         this.movieList = movieList;
     }
 
-    public List<MovieModel> getmovieList() {
+    public List<MovieModel> getMovieList() {
         return movieList;
     }
 
-    public void setmovieList(List<MovieModel> movieList) {
+    public void setMovieList(List<MovieModel> movieList) {
         this.movieList = movieList;
     }
 }
