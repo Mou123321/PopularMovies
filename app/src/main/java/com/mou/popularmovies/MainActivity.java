@@ -1,6 +1,9 @@
 package com.mou.popularmovies;
 
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -31,16 +34,18 @@ public class MainActivity extends AppCompatActivity implements MovieNavigator {
 
     private static int NUM_COL = 3;
 
+    private boolean showFavored;
+
     private final String KEY_RECYCLER_STATE = "recycler_state";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        init();
+        init(savedInstanceState);
     }
 
-    private void init() {
+    private void init(Bundle savedInstanceState) {
         recyclerView = findViewById(R.id.recycler_view);
 
         movieList = new ArrayList<>();
@@ -51,8 +56,15 @@ public class MainActivity extends AppCompatActivity implements MovieNavigator {
 
         recyclerView.setAdapter(adapter);
 
-        viewModel = new MainActivityViewModel(Repository.getInstance(getApplicationContext()));
-        viewModel.displayFilteredMovies(adapter, true);
+        viewModel = ViewModelProviders.of(this, new MainViewModelFactory(Repository.getInstance(getApplicationContext()))).get(MainActivityViewModel.class);
+
+        if (savedInstanceState != null) {
+            adapter.update(viewModel.getImageUrlList(viewModel.getMovieList()));
+        } else {
+            viewModel.displayFilteredMovies(adapter, true);
+        }
+
+        showFavored = false;
 
         ImageView view = findViewById(R.id.select_button);
         view.setOnClickListener(v -> {
@@ -61,12 +73,14 @@ public class MainActivity extends AppCompatActivity implements MovieNavigator {
             popupMenu.setOnMenuItemClickListener(item -> {
                 if (item.getTitle().equals(getString(R.string.popular_sort_text))) {
                     displayFilteredMovies(true);
+                    showFavored = false;
                 } else if (item.getTitle().equals(getString(R.string.top_rated_sort_text))) {
                     displayFilteredMovies(false);
+                    showFavored = false;
                 } else {
-                    viewModel.getFavoriteMovieList().observe(this, new Observer<List<FavoriteMovieEntity>>() {
-                        @Override
-                        public void onChanged(@Nullable List<FavoriteMovieEntity> entities) {
+                    showFavored = true;
+                    viewModel.getFavoriteMovieList().observe(this, entities -> {
+                        if (showFavored) {
                             viewModel.setFavoriteMovie(adapter, entities);
                         }
                     });

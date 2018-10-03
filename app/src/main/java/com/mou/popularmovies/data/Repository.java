@@ -17,12 +17,12 @@ import com.mou.popularmovies.data.room.FavoriteMovieDatabase;
 import com.mou.popularmovies.data.room.FavoriteMovieEntity;
 import com.mou.popularmovies.utils.ApiUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -94,13 +94,18 @@ public class Repository {
         return favoriteMovieDao.getAll();
     }
 
+    public Observable<FavoriteMovieEntity> checkIfInDatabase(String id) {
+        return Observable.fromCallable(() -> favoriteMovieDao.getMovie(id))
+                .subscribeOn(Schedulers.io());
+    }
+
     public Completable insertFavorite(FavoriteMovieEntity favoriteMovie) {
-        return Completable.fromAction(() -> favoriteMovieDao.fovorited(favoriteMovie))
+        return Completable.fromAction(() -> favoriteMovieDao.favored(favoriteMovie))
                 .subscribeOn(Schedulers.io());
     }
 
     public Completable deleteFavorite(String id) {
-        return Completable.fromAction(() -> favoriteMovieDao.unFavorited(id))
+        return Completable.fromAction(() -> favoriteMovieDao.unFavored(id))
                 .subscribeOn(Schedulers.io());
     }
 }

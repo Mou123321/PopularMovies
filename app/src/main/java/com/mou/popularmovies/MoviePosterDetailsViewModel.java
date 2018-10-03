@@ -1,5 +1,6 @@
 package com.mou.popularmovies;
 
+import android.arch.lifecycle.LiveData;
 import android.databinding.ObservableArrayList;
 import android.databinding.ObservableField;
 import android.support.annotation.Nullable;
@@ -28,7 +29,7 @@ public class MoviePosterDetailsViewModel {
     public ObservableArrayList<String> key;
     public ObservableArrayList<Pair<String, String>> reviews;
 
-    public ObservableField<Boolean> favored = new ObservableField<>(false);
+    public ObservableField<Boolean> favored;
 
     public Repository repository;
     private List<VideoModel> videos;
@@ -52,6 +53,12 @@ public class MoviePosterDetailsViewModel {
         name = new ObservableArrayList<>();
         key = new ObservableArrayList<>();
         reviews = new ObservableArrayList<>();
+
+        favored = new ObservableField<>(false);
+
+        this.repository.checkIfInDatabase(id)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(m -> favored.set(true), e -> favored.set(false));
 
         getVideos(id);
         getReviews(id);

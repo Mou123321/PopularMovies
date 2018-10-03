@@ -20,7 +20,8 @@ public class MainActivityViewModel extends ViewModel{
     private LiveData<List<FavoriteMovieEntity>> favoriteMovieList;
 
     private static String POP_ERROR_TAG = "Pop loading errors",
-            TOP_RATED_ERROR_TAG = "Top rated loading error";
+            TOP_RATED_ERROR_TAG = "Top rated loading error",
+            FAVORED_ERROR_TAG = "Favored loading error";
 
     public static String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
 
@@ -55,10 +56,10 @@ public class MainActivityViewModel extends ViewModel{
         repository.getFavoriteMovieList(getIdList(entities))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(list -> adapter.update(getImageUrlList(movieList = list)),
-                        e -> System.out.println("error is " + e.getMessage()));
+                        e -> Log.e(FAVORED_ERROR_TAG, e.getMessage()));
     }
 
-    private List<String> getImageUrlList(List<MovieModel> list) {
+    public List<String> getImageUrlList(List<MovieModel> list) {
         List<String> imageUrls = new ArrayList<>();
         for (MovieModel movie : list) {
             String imageUrl = BASE_IMAGE_URL + movie.getImageUrl();
