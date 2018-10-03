@@ -1,7 +1,7 @@
 package com.mou.popularmovies;
 
 import android.databinding.ObservableArrayList;
-import android.databinding.ObservableBoolean;
+import android.databinding.ObservableField;
 import android.support.annotation.Nullable;
 import android.util.Pair;
 
@@ -14,7 +14,8 @@ import com.mou.popularmovies.data.room.FavoriteMovieEntity;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-import rx.android.schedulers.AndroidSchedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+
 
 public class MoviePosterDetailsViewModel {
     public final String title;
@@ -27,9 +28,9 @@ public class MoviePosterDetailsViewModel {
     public ObservableArrayList<String> key;
     public ObservableArrayList<Pair<String, String>> reviews;
 
-    public ObservableBoolean favorietIt = new ObservableBoolean(false);
+    public ObservableField<Boolean> favored = new ObservableField<>(false);
 
-    private Repository repository;
+    public Repository repository;
     private List<VideoModel> videos;
 
     @Nullable
@@ -82,7 +83,6 @@ public class MoviePosterDetailsViewModel {
 
     private void getReview(List<ReviewModel> list) {
         for (ReviewModel review : list) {
-            System.out.println("author is " + review.getAuthor());
             reviews.add(new Pair<>(review.getAuthor(), review.getContent()));
         }
     }
@@ -93,13 +93,15 @@ public class MoviePosterDetailsViewModel {
         }
     }
 
-    public void favotiteMovie(boolean favoriteIt) {
-        if (mNavigator != null && mNavigator.get() != null) {
-            if (favoriteIt) {
-                mNavigator.get().favorite(repository.insertFavorite(new FavoriteMovieEntity(title, id)));
-            } else {
-                mNavigator.get().favorite(repository.deleteFavorite(new FavoriteMovieEntity(title, id)));
-            }
+    public void favoriteMovie() {
+        if (!favored.get()) {
+            repository.insertFavorite(new FavoriteMovieEntity(title, id))
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(() -> favored.set(true), Throwable::getCause);
+        } else {
+            repository.deleteFavorite(id)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(() -> favored.set(false), Throwable::getCause);
         }
     }
 }

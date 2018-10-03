@@ -6,9 +6,9 @@ import com.mou.popularmovies.data.model.ListReviewModel;
 import com.mou.popularmovies.data.model.ListVideoModel;
 import com.mou.popularmovies.data.model.MovieModel;
 
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
-import rx.Observable;
 
 public interface MovieService {
 
@@ -23,6 +23,8 @@ public interface MovieService {
 
     String REVIEW_END_POINT = "/3/movie/{id}/reviews?api_key=" + API_KEY;
 
+    String MOVIE_DETAIL_END_POINT = "/3/movie/{id}?api_key=" + API_KEY;
+
     @GET(POP_END_POINT)
     Observable<ListMovieModel> getPopMovies();
 
@@ -34,4 +36,7 @@ public interface MovieService {
 
     @GET(REVIEW_END_POINT)
     Observable<ListReviewModel> getReview(@Path("id") String id);
+
+    @GET(MOVIE_DETAIL_END_POINT)
+    Observable<MovieModel> getMovieDetail(@Path("id") String id);
 }

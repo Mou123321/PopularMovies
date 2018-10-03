@@ -2,7 +2,6 @@ package com.mou.popularmovies.data;
 
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
-import android.databinding.ObservableArrayList;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -18,11 +17,13 @@ import com.mou.popularmovies.data.room.FavoriteMovieDatabase;
 import com.mou.popularmovies.data.room.FavoriteMovieEntity;
 import com.mou.popularmovies.utils.ApiUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import rx.Completable;
-import rx.Observable;
-import rx.schedulers.Schedulers;
+import io.reactivex.Completable;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.schedulers.Schedulers;
 
 
 public class Repository {
@@ -70,6 +71,13 @@ public class Repository {
                 .map(this::getReviews);
     }
 
+    public Single<List<MovieModel>> getFavoriteMovieList(List<String> ids) {
+        return Observable.fromIterable(ids)
+                .concatMap(mService::getMovieDetail)
+                .toList()
+                .subscribeOn(Schedulers.io());
+    }
+
     private List<MovieModel> getMovieList(ListMovieModel listMovieModel) {
         return listMovieModel.getMovieList();
     }
@@ -91,8 +99,8 @@ public class Repository {
                 .subscribeOn(Schedulers.io());
     }
 
-    public Completable deleteFavorite(FavoriteMovieEntity unFavoriteMovie) {
-        return Completable.fromAction(() -> favoriteMovieDao.unFavorited(unFavoriteMovie))
+    public Completable deleteFavorite(String id) {
+        return Completable.fromAction(() -> favoriteMovieDao.unFavorited(id))
                 .subscribeOn(Schedulers.io());
     }
 }

@@ -1,27 +1,22 @@
 package com.mou.popularmovies;
 
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 
 import com.mou.popularmovies.data.Repository;
-import com.mou.popularmovies.data.model.ListMovieModel;
 import com.mou.popularmovies.data.model.MovieModel;
-import com.mou.popularmovies.data.remote.MovieService;
-import com.mou.popularmovies.utils.ApiUtils;
+import com.mou.popularmovies.data.room.FavoriteMovieEntity;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements MovieNavigator {
 
@@ -57,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements MovieNavigator {
         recyclerView.setAdapter(adapter);
 
         viewModel = new MainActivityViewModel(Repository.getInstance(getApplicationContext()));
-        viewModel.setPop(adapter, true);
+        viewModel.displayFilteredMovies(adapter, true);
 
         ImageView view = findViewById(R.id.select_button);
         view.setOnClickListener(v -> {
@@ -65,9 +60,16 @@ public class MainActivity extends AppCompatActivity implements MovieNavigator {
             popupMenu.getMenuInflater().inflate(R.menu.main_popup_menu, popupMenu.getMenu());
             popupMenu.setOnMenuItemClickListener(item -> {
                 if (item.getTitle().equals(getString(R.string.popular_sort_text))) {
-                    displayPopMovies(true);
+                    displayFilteredMovies(true);
+                } else if (item.getTitle().equals(getString(R.string.top_rated_sort_text))) {
+                    displayFilteredMovies(false);
                 } else {
-                    displayPopMovies(false);
+                    viewModel.getFavoriteMovieList().observe(this, new Observer<List<FavoriteMovieEntity>>() {
+                        @Override
+                        public void onChanged(@Nullable List<FavoriteMovieEntity> entities) {
+                            viewModel.setFavoriteMovie(adapter, entities);
+                        }
+                    });
                 }
                 return true;
             });
@@ -87,8 +89,8 @@ public class MainActivity extends AppCompatActivity implements MovieNavigator {
         super.onRestoreInstanceState(savedInstanceState);
     }
 
-    private void displayPopMovies(boolean getTop) {
-        viewModel.setPop(adapter, getTop);
+    private void displayFilteredMovies(boolean getTop) {
+        viewModel.displayFilteredMovies(adapter, getTop);
     }
 
     public static void restoreState() {
